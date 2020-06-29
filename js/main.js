@@ -1,5 +1,6 @@
 import "./phaser.min.js"
-import "./frog.js"
+import Frog from "./frog.js"
+import Car from "./car.js"
 
 var WIDTH = 480;
 var HEIGHT = 320;
@@ -23,10 +24,11 @@ let config = {
 // Déclaration de nos variables globales
 var game = new Phaser.Game(config);
 var player;
-var f1Car;
+var mom;
+var cars;
 var F1_CAR_SPEED;
 
-//
+
 function init() {
      F1_CAR_SPEED = 3;
 }
@@ -40,19 +42,27 @@ function preload() {
 
 function create() {
     this.add.sprite(240, 160, 'background');
-    rand = new Phaser.Math.RandomDataGenerator();
-    momX = rand.between(16,WIDTH);
+    var rand = new Phaser.Math.RandomDataGenerator();
+    let momX = rand.between(16,WIDTH);
     momX -= momX % 16;
     mom = this.add.sprite(momX, 8, "mom");
     player = new Frog(this, 100, 312);
-    f1Car = this.add.sprite(500, 200, 'f1');
+
+    cars = this.add.group();
+    cars.runChildUpdate = true;
+    for (var i = 0; i < 14 ; i++)
+    {
+        var newCar = new Car(this, Math.random()-0.5, ((i+3) * 16) + 8, Math.random() + F1_CAR_SPEED);
+        cars.add(newCar);
+    }
 }
 
 function update() {
-    
+    player.update();
 
-    f1Car.x -= F1_CAR_SPEED;
-    if(f1Car.x<-10) f1Car.x = 500;
-    if(Phaser.Geom.Intersects.RectangleToRectangle(player.getBounds(),f1Car.getBounds())) this.scene.restart();
+    /*
+    if(Phaser.Geom.Intersects.RectangleToRectangle(player.getBounds(),f1Car.getBounds())) 
+        this.scene.restart();
+    */
 }
 

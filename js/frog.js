@@ -1,9 +1,7 @@
-import "./phaser.min.js"
-
-export default class Frog extends Phaser.GameObject.Sprite
+export default class Frog extends Phaser.GameObjects.Sprite
 {
     JUMP_DIST = 16;
-    JUMP_SPEED = 500;
+    JUMP_DELAY = 200;
 
     move_OK;
     movement_timer;
@@ -12,22 +10,24 @@ export default class Frog extends Phaser.GameObject.Sprite
     constructor(scene, x, y)
     {
         super(scene, x, y, "frog");
-        move_OK = true;
+        this.move_OK = true;
+
+        scene.add.existing(this);
     }
     
-    Update()
+    update()
     {
-        if (move_OK) 
+        if (this.move_OK) 
         {
-            cursors = this.scene.input.keyboard.createCursorKeys();
-            if((cursors.right.isDown)&&(this.x < (WIDTH - FROG_JUMP/2)))
-                Move("right");
-            if((cursors.left.isDown)&&(this.x > (0 + FROG_JUMP/2)))
-                Move("left");
-            if((cursors.up.isDown)&&(this.y > (0 + FROG_JUMP/2)))
-                Move("up");
-            if((cursors.down.isDown)&&(this.y < (HEIGHT - FROG_JUMP/2)))
-                Move("down");        
+            this.cursors = this.scene.input.keyboard.createCursorKeys();
+            if((this.cursors.right.isDown)&&(this.x < (this.scene.game.config.width - this.JUMP_DIST/2)))
+                this.Move("right");
+            if((this.cursors.left.isDown)&&(this.x > (0 + this.JUMP_DIST/2)))
+                this.Move("left");
+            if((this.cursors.up.isDown)&&(this.y > (0 + this.JUMP_DIST/2)))
+                this.Move("up");
+            if((this.cursors.down.isDown)&&(this.y < (this.scene.game.config.height - this.JUMP_DIST/2)))
+                this.Move("down");        
         }
     }
 
@@ -37,27 +37,27 @@ export default class Frog extends Phaser.GameObject.Sprite
         {
             case "up":
                 this.setAngle(0);
-                this.y -= FROG_JUMP;
+                this.y -= this.JUMP_DIST;
                 break;
             case "down":
                 this.setAngle(180);
-                this.y += FROG_JUMP;
+                this.y += this.JUMP_DIST;
                 break;
             case "left":
                 this.setAngle(-90);
-                this.x -= FROG_JUMP;
+                this.x -= this.JUMP_DIST;
                 break;
             case "right":
                 this.setAngle(90);
-                this.x += FROG_JUMP;
+                this.x += this.JUMP_DIST;
                 break;
             default:
                 return;
         }
-        move_OK = false;
+        this.move_OK = false;
         this.movement_timer = this.scene.time.addEvent({
-            delay: JUMP_SPEED,
-            callback: function (){ move_OK = true },
+            delay: this.JUMP_DELAY,
+            callback: function (){ this.move_OK = true },
             callbackScope: this,
             repeat: 0
         })
