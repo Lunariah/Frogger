@@ -1,16 +1,16 @@
 export default class Frog extends Phaser.GameObjects.Sprite
 {
-    JUMP_DIST = 16;
-    JUMP_DELAY = 200;
+    JUMP_DIST = 16; // Length of every jump (in pixels)
+    JUMP_DELAY = 200; // Minimal delay between jumps (in milliseconds)
 
-    move_OK;
-    movement_timer;
-    cursors; 
+    move_OK; // If we’re allowed to move again
+    keyboard; // Keyboard input
 
     constructor(scene, x, y)
     {
         super(scene, x, y, "frog");
         this.move_OK = true;
+        this.keyboard = scene.input.keyboard.createCursorKeys();
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -20,14 +20,13 @@ export default class Frog extends Phaser.GameObjects.Sprite
     {
         if (this.move_OK) 
         {
-            this.cursors = this.scene.input.keyboard.createCursorKeys();
-            if((this.cursors.right.isDown)&&(this.x < (this.scene.game.config.width - this.JUMP_DIST/2)))
+            if((this.keyboard.right.isDown) && (this.x < (this.scene.game.config.width - this.JUMP_DIST/2)))
                 this.Move("right");
-            if((this.cursors.left.isDown)&&(this.x > (0 + this.JUMP_DIST/2)))
+            if((this.keyboard.left.isDown) && (this.x > (0 + this.JUMP_DIST/2)))
                 this.Move("left");
-            if((this.cursors.up.isDown)&&(this.y > (0 + this.JUMP_DIST/2)))
+            if((this.keyboard.up.isDown) && (this.y > (0 + this.JUMP_DIST/2)))
                 this.Move("up");
-            if((this.cursors.down.isDown)&&(this.y < (this.scene.game.config.height - this.JUMP_DIST/2)))
+            if((this.keyboard.down.isDown) && (this.y < (this.scene.game.config.height - this.JUMP_DIST/2)))
                 this.Move("down");        
         }
     }
@@ -56,11 +55,10 @@ export default class Frog extends Phaser.GameObjects.Sprite
                 return;
         }
         this.move_OK = false;
-        this.movement_timer = this.scene.time.addEvent({
+        this.scene.time.addEvent({
             delay: this.JUMP_DELAY,
             callback: function (){ this.move_OK = true },
-            callbackScope: this,
-            repeat: 0
+            callbackScope: this
         })
     }
 }
