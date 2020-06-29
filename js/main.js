@@ -29,23 +29,26 @@ var cars;
 var F1_CAR_SPEED;
 
 
-function init() {
+function init() 
+{
      F1_CAR_SPEED = 3;
 }
 
-function preload() {
+function preload() 
+{
     this.load.image('frog', './assets/images/Frog.png');
     this.load.image('f1', './assets/images/F1-1.png');
     this.load.image('background', './assets/images/FroggerBackground.png');
     this.load.image("mom", "./assets/images/momfrog.png");
 }
 
-function create() {
+function create() 
+{
     this.add.sprite(240, 160, 'background');
     var rand = new Phaser.Math.RandomDataGenerator();
     let momX = rand.between(16,WIDTH);
     momX -= momX % 16;
-    mom = this.add.sprite(momX, 8, "mom");
+    mom = this.physics.add.sprite(momX, 8, "mom");
     player = new Frog(this, 100, 312);
 
     cars = this.add.group();
@@ -55,14 +58,16 @@ function create() {
         var newCar = new Car(this, Math.random()-0.5, ((i+3) * 16) + 8, Math.random() + F1_CAR_SPEED);
         cars.add(newCar);
     }
+
+    this.physics.add.collider(player, cars, collision_frog_car, null, this);
 }
 
-function update() {
+function update() 
+{
     player.update();
-
-    /*
-    if(Phaser.Geom.Intersects.RectangleToRectangle(player.getBounds(),f1Car.getBounds())) 
-        this.scene.restart();
-    */
 }
 
+function collision_frog_car(game)
+{
+    this.scene.restart();
+}

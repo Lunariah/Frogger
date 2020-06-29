@@ -13,6 +13,7 @@ export default class Frog extends Phaser.GameObjects.Sprite
         this.move_OK = true;
 
         scene.add.existing(this);
+        scene.physics.add.existing(this);
     }
     
     update()

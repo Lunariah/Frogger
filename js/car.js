@@ -22,6 +22,7 @@ export default class Car extends Phaser.GameObjects.Sprite
         
         
         scene.add.existing(this);
+        scene.physics.add.existing(this);
 
         console.log(this.y);
     }
